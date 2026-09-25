@@ -15,19 +15,16 @@ def checkmate(board: str):
             return
 
     # Find the King ('K')
-    king_pos = None
+    king_positions = []
     for r in range(size):
         for c in range(size):
             if lines[r][c] == 'K':
-                king_pos = (r, c)
-                break
-        if king_pos:
-            break
+                king_positions.append((r, c))
 
-    if not king_pos:
+    if len(king_positions) != 1:
         return
 
-    kr, kc = king_pos
+    kr, kc = king_positions[0]
 
     # Check Pawn attack positions (Pawns attack diagonally up-left and up-right)
     pawn_attacks = [(kr + 1, kc - 1), (kr + 1, kc + 1)]
@@ -46,27 +43,25 @@ def checkmate(board: str):
         r, c = kr + dr, kc + dc
         while 0 <= r < size and 0 <= c < size:
             piece = lines[r][c]
-            if piece in ('.', ' '):
-                r += dr
-                c += dc
-                continue
             if piece in ('R', 'Q'):
                 print("Success")
                 return
-            break  # Blocked by another piece
+            if piece in ('P', 'B', 'K'):
+                break  
+            r += dr
+            c += dc
 
     # Check diagonal lines (Bishop 'B' and Queen 'Q')
     for dr, dc in diag_dirs:
         r, c = kr + dr, kc + dc
         while 0 <= r < size and 0 <= c < size:
             piece = lines[r][c]
-            if piece in ('.', ' '):
-                r += dr
-                c += dc
-                continue
             if piece in ('B', 'Q'):
                 print("Success")
                 return
-            break  # Blocked by another piece
+            if piece in ('P', 'R', 'K'):
+                break  
+            r += dr
+            c += dc
 
     print("Fail")
